@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=181" />
+  <link rel="stylesheet" href="style.css?v=182" />
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
 
   <style>
@@ -937,8 +937,14 @@
             .to(discover, { y: 0, duration: 0.5, ease: 'power4.out' }, 0.22);
         }
 
-        card.addEventListener('mouseenter', function() { initHover(); tl.play(); });
-        card.addEventListener('mouseleave', function() { if (tl) tl.reverse(); });
+        if (window.matchMedia('(hover: none)').matches) {
+          // Touch device — init immediately and keep bar expanded
+          initHover();
+          tl.progress(1).pause();
+        } else {
+          card.addEventListener('mouseenter', function() { initHover(); tl.play(); });
+          card.addEventListener('mouseleave', function() { if (tl) tl.reverse(); });
+        }
       });
 
       // ── CTA heading entrance ──

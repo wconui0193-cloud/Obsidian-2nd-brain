@@ -3985,11 +3985,20 @@ ul { list-style: none; }
   .site-modal__title { font-size: 11px; }
 }
 
-/* ── Tools block: hide orbit on mobile — items scatter at small sizes ── */
+/* ── Tools block: collapse to static on mobile — orbit disabled via JS ── */
 @media (max-width: 700px) {
   .tools-block__center { display: none; }
-  .tools-block__inner { grid-template-columns: 1fr; gap: 32px; }
+  .tools-block { height: auto !important; }
+  .tools-block__inner {
+    position: relative !important;
+    top: auto !important;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    min-height: auto !important;
+    padding: 64px 6%;
+  }
   .tools-block__left { padding-right: 0; }
+  .tools-block__right { display: none; }
 }
 
 /* ── Hard clip: clip horizontal overflow without breaking ScrollTrigger ── */
