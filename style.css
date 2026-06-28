@@ -3985,8 +3985,8 @@ ul { list-style: none; }
   .site-modal__title { font-size: 11px; }
 }
 
-/* ── Tools block: collapse to static on mobile — orbit disabled via JS ── */
-@media (max-width: 700px) {
+/* ── Tools block: collapse to static on mobile/tablet — orbit disabled via JS ── */
+@media (max-width: 900px) {
   .tools-block__center { display: none; }
   .tools-block { height: auto !important; }
   .tools-block__inner {

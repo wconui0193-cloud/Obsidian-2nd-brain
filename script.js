@@ -844,7 +844,7 @@ fadeEls.forEach(el => observer.observe(el));
 // ── Keychain Circular Orbit — 3 items orbit a circle, rotation scroll-scrubbed
 (function initKeychainOrbit() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.innerWidth <= 700) return;
+  if (window.innerWidth <= 900) return;
 
   var section   = document.getElementById('tools-block');
   var items     = Array.from(document.querySelectorAll('.keychain-item'));
