@@ -442,9 +442,9 @@ ul { list-style: none; }
 }
 .nav__links li a {
   display: block;
-  font-family: 'Sora', sans-serif;
+  font-family: 'QanelasHeavy', 'Barlow Condensed', sans-serif;
   font-size: clamp(22px, 2.4vw, 32px);
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: -0.03em;
   color: rgba(42,42,42,0.35);
   padding: 8px 0;
@@ -456,6 +456,19 @@ ul { list-style: none; }
 .nav__links li a.active {
   color: var(--orange);
   border-bottom-color: rgba(255,106,0,0.2);
+}
+.nav__system-btn {
+  color: #FF6A00 !important;
+  background: none !important;
+  border-radius: 0 !important;
+  padding: 8px 0 !important;
+  font-family: 'QanelasHeavy', 'Barlow Condensed', sans-serif !important;
+  letter-spacing: -0.02em !important;
+}
+.nav__system-btn:hover {
+  color: #FF6A00 !important;
+  opacity: 0.75;
+  border-bottom-color: rgba(255,106,0,0.2) !important;
 }
 
 /* Panel footer */
@@ -2174,8 +2187,130 @@ ul { list-style: none; }
 }
 
 /* ══════════════════════════════════════════
-   JOURNEY — MOCK UI PANELS (right column)
+   HOW IT WORKS — static two-column layout
 ══════════════════════════════════════════ */
+
+.proc-section {
+  background: var(--black);
+  padding: 120px 5% 140px;
+  overflow: hidden;
+}
+
+.proc-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 80px;
+  align-items: start;
+}
+
+.proc-hl {
+  font-family: var(--font-h);
+  font-size: clamp(48px, 6vw, 86px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 12px 0 28px;
+}
+
+.proc-sub {
+  font-family: var(--font-b);
+  font-size: 16px;
+  color: var(--steel);
+  line-height: 1.7;
+  max-width: 460px;
+  margin-bottom: 56px;
+}
+
+.proc-items { border-top: 1px solid rgba(246,247,248,0.08); }
+
+.proc-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 0 20px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(246,247,248,0.08);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.proc-row.is-visible { opacity: 1; transform: translateY(0); }
+
+.proc-row:nth-child(1) { transition-delay: 0.00s; }
+.proc-row:nth-child(2) { transition-delay: 0.07s; }
+.proc-row:nth-child(3) { transition-delay: 0.14s; }
+.proc-row:nth-child(4) { transition-delay: 0.21s; }
+.proc-row:nth-child(5) { transition-delay: 0.28s; }
+.proc-row:nth-child(6) { transition-delay: 0.35s; }
+
+.proc-row__num {
+  font-family: var(--font-h);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--orange);
+}
+.proc-row__num--won { color: #4ade80; }
+
+.proc-row__title {
+  font-family: var(--font-h);
+  font-size: clamp(20px, 2.4vw, 30px);
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.proc-row__meta {
+  font-family: var(--font-b);
+  font-size: 11px;
+  color: var(--steel);
+  margin-top: 4px;
+}
+
+.proc-row__phase {
+  font-family: var(--font-b);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(246,247,248,0.25);
+  white-space: nowrap;
+}
+.proc-row__phase--won { color: #4ade80; }
+
+/* Right column: sticky flow panel in normal document flow */
+.proc-right { position: sticky; top: 88px; }
+
+.j-flow-panel--static {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  pointer-events: auto !important;
+  display: flex !important;
+}
+
+/* Add CSS transition to connector fill (was JS-only before) */
+.j-fn__fill { transition: height 0.45s ease; }
+
+/* Responsive */
+@media (max-width: 1040px) {
+  .proc-inner { grid-template-columns: 1fr 320px; gap: 48px; }
+}
+@media (max-width: 760px) {
+  .proc-section { padding: 80px 5% 100px; }
+  .proc-inner   { grid-template-columns: 1fr; }
+  .proc-right   { position: static; margin-top: 48px; }
+  .j-flow-panel--static { display: flex !important; }
+}
 
 
 /* ══════════════════════════════════════════

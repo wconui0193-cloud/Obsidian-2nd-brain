@@ -1,3 +1,9 @@
+// ── GSAP GLOBAL CONFIG ──
+if (typeof gsap !== 'undefined') {
+  gsap.config({ nullTargetWarn: false, autoSleep: 60 });
+  gsap.ticker.lagSmoothing(false);
+}
+
 // ── NAV: expandable sidebar ──
 const navEl      = document.getElementById('nav');
 const navToggle  = document.getElementById('navToggle');
@@ -324,96 +330,74 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 }());
 
-// ── JOURNEY — full-screen scrollytelling step sequence ──
-(function initJourney() {
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+// ── HOW IT WORKS — IntersectionObserver cascade (no scrollytelling, no pin, no GSAP) ──
+(function initProcFlow() {
+  var section = document.getElementById('journey');
+  if (!section) return;
 
-  var pin       = document.querySelector('.journey__pin');
-  var steps     = Array.from(document.querySelectorAll('.j-step'));
-  var dots      = Array.from(document.querySelectorAll('.j-dot'));
-  var fill      = document.querySelector('.j-progress-fill');
-  var fnNodes      = Array.from(document.querySelectorAll('.j-fn'));
-  var fnFills      = Array.from(document.querySelectorAll('.j-fn__fill'));
-  var fnConnectors = Array.from(document.querySelectorAll('.j-fn__connector'));
-  var jTerminal    = document.getElementById('jTerminal');
-  var flowPanel    = document.querySelector('.j-flow-panel');
-  if (!pin || !steps.length) return;
-
-  var totalSteps = steps.length;
-
-  // Initial state: step 0 centered and visible, rest below + hidden
-  steps.forEach(function(step, i) {
-    gsap.set(step, {
-      yPercent: i === 0 ? -50 : -50 + (i * 30),
-      opacity : i === 0 ? 1 : 0,
-    });
-  });
-
-  ScrollTrigger.create({
-    trigger          : pin,
-    start            : 'top top',
-    end              : () => '+=' + (window.innerHeight * (totalSteps - 1)) + 'px',
-    pin              : true,
-    pinSpacing       : true,
-    scrub            : 0.7,
-    invalidateOnRefresh: true,
-
-    onUpdate: function(self) {
-      var prog     = self.progress;
-      var rawIndex = prog * (totalSteps - 1);
-      var active   = Math.round(rawIndex);
-
-      // Update progress fill
-      if (fill) fill.style.width = (prog * 100) + '%';
-
-      // Animate each step
-      steps.forEach(function(step, i) {
-        var dist = rawIndex - i;         // negative = step hasn't arrived yet, positive = step has passed
-        var absDist = Math.abs(dist);
-        var opacity  = Math.max(0, 1 - absDist * 1.6);
-        // incoming steps rise from below, outgoing steps exit upward
-        var yPercent = -50 + (i - rawIndex) * 28;
-        gsap.set(step, { opacity: opacity, yPercent: yPercent, pointerEvents: opacity > 0.5 ? 'auto' : 'none' });
-      });
-
-      // Update nav dots
-      dots.forEach(function(dot, i) {
-        dot.classList.toggle('j-dot--active', i === active);
-      });
-
-      // Update workflow panel nodes
-      fnNodes.forEach(function(node, i) {
-        var nodeIndex = i + 1; // nodes 1-indexed, steps 1-indexed
-        var isIntro   = active === 0;
-        var isActive  = !isIntro && active === nodeIndex;
-        var isDone    = !isIntro && active > nodeIndex;
-        node.classList.toggle('j-fn--active', isActive);
-        node.classList.toggle('j-fn--done',   isDone);
-      });
-
-      // Animate connector line fills between nodes + glow dots
-      fnFills.forEach(function(fillEl, i) {
-        var fromNode  = i + 1;
-        var progress  = Math.max(0, Math.min(1, rawIndex - fromNode));
-        fillEl.style.height = (progress * 100) + '%';
-        if (fnConnectors[i]) {
-          fnConnectors[i].classList.toggle('j-fn__connector--lit', progress >= 0.5);
+  // Left-side rows: stagger-reveal on scroll entry
+  var rows = Array.from(section.querySelectorAll('.proc-row'));
+  if (rows.length) {
+    var rowObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          rowObs.unobserve(entry.target);
         }
       });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+    rows.forEach(function(row) { rowObs.observe(row); });
+  }
 
-      // Terminal glow when all nodes done (step 5 = last node)
-      if (jTerminal) {
-        jTerminal.classList.toggle('j-fn__terminal--lit', rawIndex >= fnNodes.length);
-      }
+  // Right-side flow panel: cascade each node active → done on section entry
+  var nodes      = Array.from(section.querySelectorAll('.j-fn'));
+  var connectors = Array.from(section.querySelectorAll('.j-fn__connector'));
+  var fills      = Array.from(section.querySelectorAll('.j-fn__fill'));
+  var terminal   = section.querySelector('.j-fn__terminal');
+  if (!nodes.length) return;
 
-      // Fade flow panel out as CTA step (last step) comes in
-      if (flowPanel) {
-        var ctaIndex  = totalSteps - 1;
-        var panelFade = Math.max(0, 1 - Math.max(0, rawIndex - (ctaIndex - 1)));
-        gsap.set(flowPanel, { opacity: panelFade, pointerEvents: panelFade < 0.05 ? 'none' : 'auto' });
+  var played = false;
+  var panelObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !played) {
+        played = true;
+        panelObs.disconnect();
+        cascade(nodes, connectors, fills, terminal);
       }
-    },
-  });
+    });
+  }, { threshold: 0.2 });
+  panelObs.observe(section);
+
+  function cascade(nodes, connectors, fills, terminal) {
+    var STEP = 620; // ms between node activations
+
+    nodes.forEach(function(node, i) {
+      // Activate this node
+      setTimeout(function() {
+        if (i > 0) {
+          nodes[i - 1].classList.remove('j-fn--active');
+          nodes[i - 1].classList.add('j-fn--done');
+          if (fills[i - 1]) fills[i - 1].style.height = '100%';
+          if (connectors[i - 1]) connectors[i - 1].classList.add('j-fn__connector--lit');
+        }
+        node.classList.add('j-fn--active');
+      }, i * STEP);
+
+      // Start partial connector fill under this node mid-step
+      if (fills[i]) {
+        setTimeout(function() { fills[i].style.height = '55%'; }, i * STEP + STEP * 0.45);
+      }
+    });
+
+    // Finish last node + light terminal
+    setTimeout(function() {
+      var last = nodes[nodes.length - 1];
+      if (last) { last.classList.remove('j-fn--active'); last.classList.add('j-fn--done'); }
+      if (fills[fills.length - 1]) fills[fills.length - 1].style.height = '100%';
+      if (connectors[connectors.length - 1]) connectors[connectors.length - 1].classList.add('j-fn__connector--lit');
+      if (terminal) terminal.classList.add('j-fn__terminal--lit');
+    }, nodes.length * STEP);
+  }
 }());
 
 
@@ -947,7 +931,6 @@ fadeEls.forEach(el => observer.observe(el));
   var whoSection   = document.querySelector('.who-v2');
   var toolsSection = document.getElementById('tools-block');
 
-  // Phase 1: who-v2 — white fades into a warm orange tint as you scroll through
   if (whoSection) {
     gsap.fromTo(whoSection,
       { backgroundColor: '#F6F7F8' },
@@ -956,15 +939,14 @@ fadeEls.forEach(el => observer.observe(el));
         ease: 'none',
         scrollTrigger: {
           trigger: whoSection,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.5
+          start  : 'top top',
+          end    : 'bottom bottom',
+          scrub  : 1.5
         }
       }
     );
   }
 
-  // Phase 2: tools-block — deepens to full CraftLab orange
   if (toolsSection) {
     gsap.fromTo(toolsSection,
       { backgroundColor: '#FFD4A8' },
@@ -973,9 +955,9 @@ fadeEls.forEach(el => observer.observe(el));
         ease: 'none',
         scrollTrigger: {
           trigger: toolsSection,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.5
+          start  : 'top top',
+          end    : 'bottom bottom',
+          scrub  : 1.5
         }
       }
     );
@@ -1012,5 +994,28 @@ fadeEls.forEach(el => observer.observe(el));
     btn.classList.toggle('visible', scrolled >= 0.99);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+}());
+
+// Tab-switch note: ScrollTrigger.refresh() was removed — it recalculated positions
+// incorrectly after the journey pin spacers were removed, breaking all scrub animations.
+// All remaining GSAP sections (WHO, tools bg, keychain orbit) use scrub-based tweens
+// that auto-seek correctly on tab return without any manual refresh.
+
+// ── HASH NAV FIX — prevent GSAP pin collision on direct hash load ──
+(function() {
+  var hash = window.location.hash;
+  if (!hash || hash === '#home') return;
+  // Strip hash so browser starts at top; GSAP pins initialize correctly
+  history.replaceState(null, null, window.location.pathname + window.location.search);
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+      var target = document.querySelector(hash);
+      if (target) {
+        var top = target.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    }, 350);
+  });
 }());
 
