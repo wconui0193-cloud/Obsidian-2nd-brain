@@ -3879,16 +3879,108 @@ ul { list-style: none; }
 
 /* ── Small phones ≤400px ── */
 @media (max-width: 400px) {
-  body { padding-left: 52px; }
-  .nav       { width: 52px; }
-  .nav__strip{ width: 52px; }
-  .nav__icon-mark { width: 32px; height: 32px; font-size: 13px; border-radius: 7px; margin-bottom: 24px; }
-  .nav__social    { width: 34px; height: 34px; }
-  .nav__overlay   { left: 52px; }
-  .nav.nav--open  { width: 100%; }
   .container { padding: 0 14px; }
-
   .who__list { grid-template-columns: 1fr; }
   .about__pillars { grid-template-columns: 1fr; }
   .process__step { padding: 28px 0; }
+}
+
+
+/* ══════════════════════════════════════════
+   MOBILE OVERRIDES — global responsive pass
+   Breakpoints: 768px tablet, 560px phone, 400px small phone
+══════════════════════════════════════════ */
+
+/* ── Hero: clamp plx-icon so it never exceeds viewport width ── */
+@media (max-width: 480px) {
+  .hero__plx-icon { width: clamp(260px, 80vw, 400px); }
+  .hero__watermark { top: 48px; }
+}
+
+/* ── Who section: collapse 42/58 grid to single column ── */
+@media (max-width: 768px) {
+  .who__pin {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .who__folders { display: none; }
+  .who__text { padding: 64px 6% 48px; min-height: auto; }
+  .who__h { font-size: clamp(40px, 10vw, 72px); }
+}
+
+/* ── How It Works slides: collapse 2-col to 1-col, fix heading scale ── */
+@media (max-width: 768px) {
+  .whs__track { height: auto; }
+  .whs__scene { position: relative; height: auto; overflow: visible; padding: 60px 0 80px; flex-direction: column; align-items: stretch; }
+  .whs__slide {
+    position: relative;
+    width: 88%;
+    left: 6%;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .whs__slide-h { font-size: clamp(36px, 9vw, 60px); }
+  .whs__slide + .whs__slide { margin-top: 64px; }
+  .whs__label { position: relative; top: auto; left: auto; padding: 40px 6% 0; }
+}
+
+/* ── Stats / CTA band: hide dividers when stacking vertically ── */
+@media (max-width: 768px) {
+  .cta-block__stat-divider { display: none; }
+}
+
+/* ── Nav panel: max-height + scroll so content is reachable on short phones ── */
+@media (max-width: 640px) {
+  .nav__panel {
+    max-height: calc(100svh - 64px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ══════════════════════════════════════════
+   PORTFOLIO PAGE — mobile
+══════════════════════════════════════════ */
+
+/* ── Portfolio header mark: hide on mobile to prevent overflow ── */
+@media (max-width: 900px) {
+  .port-header__mark { display: none; }
+}
+
+/* ── Filter nav: allow horizontal scroll on small screens ── */
+@media (max-width: 640px) {
+  .port-filter {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 20px;
+    gap: 8px;
+    scrollbar-width: none;
+  }
+  .port-filter::-webkit-scrollbar { display: none; }
+  .port-filter__all { flex-shrink: 0; }
+  .port-filter__btn { flex-shrink: 0; }
+}
+
+/* ── Portfolio cards: show bar expanded on touch (no hover on mobile) ── */
+@media (hover: none) {
+  .port-card__bar { width: calc(100% - 24px) !important; }
+  .port-card__bar-body { height: auto !important; }
+  .port-card__discover { transform: none !important; }
+  .port-card__bar-body-inner { overflow: visible; }
+}
+
+/* ── Portfolio grid: single column on small phones ── */
+@media (max-width: 480px) {
+  .port-grid { gap: 12px; padding: 24px 4% 48px; }
+  .port-header { padding: 100px 4% 40px; }
+  .port-filter { padding-left: 4%; padding-right: 4%; }
+}
+
+/* ── Site modal: full screen on mobile, close bar stays usable ── */
+@media (max-width: 640px) {
+  .site-modal__url { display: none; }
+  .site-modal__title { font-size: 11px; }
 }
