@@ -4004,6 +4004,10 @@ ul { list-style: none; }
 /* ── Hard clip: clip horizontal overflow without breaking ScrollTrigger ── */
 /* overflow-x: clip does NOT create a scroll container (unlike hidden),   */
 /* so GSAP ScrollTrigger keeps listening to window scroll correctly.       */
+/* Both html AND body need clip — body alone doesn't prevent html scroll. */
 @media (max-width: 768px) {
+  html { overflow-x: clip; }
   body { overflow-x: clip; }
+  .tools-block { overflow: hidden; }
+  .who-panel__tag { font-size: clamp(18px, 4vw, 28px); }
 }
