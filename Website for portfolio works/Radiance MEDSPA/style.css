@@ -1,49 +1,49 @@
 /* ─── CORMORANT FONT FACES ─── */
 @font-face {
   font-family: 'Cormorant';
-  src: url('Brand Assets/Cormorant display Fonts/Cormorant-Light.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/Cormorant-Light.otf') format('opentype');
   font-weight: 300; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant';
-  src: url('Brand Assets/Cormorant display Fonts/Cormorant-LightItalic.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/Cormorant-LightItalic.otf') format('opentype');
   font-weight: 300; font-style: italic; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant';
-  src: url('Brand Assets/Cormorant display Fonts/Cormorant-Regular.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/Cormorant-Regular.otf') format('opentype');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant';
-  src: url('Brand Assets/Cormorant display Fonts/Cormorant-RegularItalic.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/Cormorant-RegularItalic.otf') format('opentype');
   font-weight: 400; font-style: italic; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant';
-  src: url('Brand Assets/Cormorant display Fonts/Cormorant-Medium.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/Cormorant-Medium.otf') format('opentype');
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'CormorantSC';
-  src: url('Brand Assets/Cormorant display Fonts/CormorantSC-Light.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/CormorantSC-Light.otf') format('opentype');
   font-weight: 300; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'CormorantSC';
-  src: url('Brand Assets/Cormorant display Fonts/CormorantSC-Regular.otf') format('opentype');
+  src: url('Brand Assets Radiance/Cormorant display Fonts/CormorantSC-Regular.otf') format('opentype');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Nirotica';
-  src: url('Brand Assets/Nirotica/Nirotica.otf') format('opentype'),
-       url('Brand Assets/Nirotica/Nirotica.ttf') format('truetype');
+  src: url('Brand Assets Radiance/Nirotica/Nirotica.otf') format('opentype'),
+       url('Brand Assets Radiance/Nirotica/Nirotica.ttf') format('truetype');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Nirotica';
-  src: url('Brand Assets/Nirotica/Nirotica Bold.otf') format('opentype'),
-       url('Brand Assets/Nirotica/Nirotica Bold.ttf') format('truetype');
+  src: url('Brand Assets Radiance/Nirotica/Nirotica Bold.otf') format('opentype'),
+       url('Brand Assets Radiance/Nirotica/Nirotica Bold.ttf') format('truetype');
   font-weight: 700; font-style: normal; font-display: swap;
 }
 
